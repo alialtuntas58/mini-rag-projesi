@@ -16,7 +16,7 @@ def soruyu_embed_et(soru):
     return sonuc.embeddings[0].values
 
 
-def ilgili_parcalari_bul(soru, kac_tane=3):
+def ilgili_parcalari_bul(soru, kac_tane=6):
     """
     Soruyu embed edip, ChromaDB'de en yakın 'kac_tane' parçayı bulur.
     Geriye [{"metin": ..., "sayfa": ..., "dosya": ...}, ...] formatında liste döner.
@@ -50,4 +50,3 @@ if __name__ == "__main__":
         print(f"--- Parça {i+1} ({p['dosya']} - Sayfa {p['sayfa']}) ---")
         print(p["metin"][:200])
         print()
-        
