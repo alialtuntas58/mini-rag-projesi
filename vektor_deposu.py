@@ -1,38 +1,57 @@
 import chromadb
 from embedder import metni_embed_et
 
-# Kalıcı bir veritabanı istemcisi oluştur - "chroma_db" klasörüne kaydedecek
 client = chromadb.PersistentClient(path="./chroma_db")
-
-# "dokumanlar" adında bir koleksiyon (tablo gibi düşün) oluştur ya da varsa kullan
 koleksiyon = client.get_or_create_collection(name="dokumanlar")
 
 
-def parcalari_kaydet(parcalar):
+def parcalari_kaydet(parcalar, dosya_adi):
     """
-    parcalar: [{"metin": ..., "sayfa": ...}, ...] formatında liste (chunker'dan geliyor)
-    Her parçayı embed edip ChromaDB'ye kaydeder.
+    parcalar: [{"metin": ..., "sayfa": ...}, ...] formatında liste
+    dosya_adi: bu parçaların hangi PDF'ten geldiği (örn. "rapor.pdf")
     """
     for i, parca in enumerate(parcalar):
         vektor = metni_embed_et(parca["metin"])
 
+        # id artık dosya adına da bağlı, böylece farklı dosyalardaki
+        # "parca_0" isimleri çakışmıyor
+        benzersiz_id = f"{dosya_adi}_parca_{i}"
+
         koleksiyon.add(
-            ids=[f"parca_{i}"],                    # her kayıt için benzersiz bir kimlik
-            embeddings=[vektor],                     # az önce ürettiğimiz vektör
-            documents=[parca["metin"]],               # orijinal metin (arama sonrası okumak için)
-            metadatas=[{"sayfa": parca["sayfa"]}]      # ek bilgi: hangi sayfadan geldiği
+            ids=[benzersiz_id],
+            embeddings=[vektor],
+            documents=[parca["metin"]],
+            metadatas=[{"sayfa": parca["sayfa"], "dosya": dosya_adi}]
         )
-        print(f"Parça {i+1}/{len(parcalar)} kaydedildi (Sayfa {parca['sayfa']})")
+        print(f"{dosya_adi} - Parça {i+1}/{len(parcalar)} kaydedildi (Sayfa {parca['sayfa']})")
+
+
+def klasordeki_tum_pdfleri_isle(klasor_yolu="."):
+    """
+    Verilen klasördeki tüm .pdf dosyalarını bulur, her birini
+    okur, parçalar, embed eder ve ChromaDB'ye kaydeder.
+    """
+    import os
+    from pdf_okuyucu import pdf_metin_cikar
+    from chunker import metni_parcala
+
+    pdf_dosyalari = [f for f in os.listdir(klasor_yolu) if f.lower().endswith(".pdf")]
+
+    if not pdf_dosyalari:
+        print("Klasörde hiç PDF dosyası bulunamadı.")
+        return
+
+    print(f"{len(pdf_dosyalari)} PDF dosyası bulundu: {pdf_dosyalari}\n")
+
+    for dosya_adi in pdf_dosyalari:
+        print(f"\n=== {dosya_adi} işleniyor ===")
+        sayfalar = pdf_metin_cikar(os.path.join(klasor_yolu, dosya_adi))
+        parcalar = metni_parcala(sayfalar)
+        parcalari_kaydet(parcalar, dosya_adi)
+
+    print(f"\nToplam kayıt sayısı: {koleksiyon.count()}")
 
 
 # --- Test kısmı ---
 if __name__ == "__main__":
-    from pdf_okuyucu import pdf_metin_cikar
-    from chunker import metni_parcala
-
-    sayfalar = pdf_metin_cikar("ornek.pdf")
-    parcalar = metni_parcala(sayfalar)
-
-    parcalari_kaydet(parcalar)
-
-    print(f"\nToplam kayıt sayısı: {koleksiyon.count()}")
+    klasordeki_tum_pdfleri_isle(".")

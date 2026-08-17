@@ -1,5 +1,5 @@
 from google.genai import types
-from embedder import client  # embedder.py'daki genai client'ı tekrar kullanıyoruz
+from embedder import client
 from vektor_deposu import koleksiyon
 
 
@@ -19,7 +19,7 @@ def soruyu_embed_et(soru):
 def ilgili_parcalari_bul(soru, kac_tane=3):
     """
     Soruyu embed edip, ChromaDB'de en yakın 'kac_tane' parçayı bulur.
-    Geriye [{"metin": ..., "sayfa": ...}, ...] formatında liste döner.
+    Geriye [{"metin": ..., "sayfa": ..., "dosya": ...}, ...] formatında liste döner.
     """
     soru_vektoru = soruyu_embed_et(soru)
 
@@ -28,12 +28,12 @@ def ilgili_parcalari_bul(soru, kac_tane=3):
         n_results=kac_tane
     )
 
-    # ChromaDB sonucu iç içe listeler halinde döner, düz bir yapıya çeviriyoruz
     bulunan_parcalar = []
     for metin, meta in zip(sonuclar["documents"][0], sonuclar["metadatas"][0]):
         bulunan_parcalar.append({
             "metin": metin,
-            "sayfa": meta["sayfa"]
+            "sayfa": meta["sayfa"],
+            "dosya": meta.get("dosya", "bilinmiyor")
         })
 
     return bulunan_parcalar
@@ -47,6 +47,7 @@ if __name__ == "__main__":
     print(f"Soru: {soru}\n")
     print(f"Bulunan {len(parcalar)} ilgili parça:\n")
     for i, p in enumerate(parcalar):
-        print(f"--- Parça {i+1} (Sayfa {p['sayfa']}) ---")
+        print(f"--- Parça {i+1} ({p['dosya']} - Sayfa {p['sayfa']}) ---")
         print(p["metin"][:200])
         print()
+        
