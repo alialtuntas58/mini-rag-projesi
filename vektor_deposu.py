@@ -17,7 +17,7 @@ def parcalari_kaydet(parcalar, dosya_adi):
         # "parca_0" isimleri çakışmıyor
         benzersiz_id = f"{dosya_adi}_parca_{i}"
 
-        koleksiyon.add(
+        koleksiyon.upsert(
             ids=[benzersiz_id],
             embeddings=[vektor],
             documents=[parca["metin"]],

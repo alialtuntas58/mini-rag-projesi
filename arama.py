@@ -41,12 +41,12 @@ def ilgili_parcalari_bul(soru, kac_tane=6):
 
 # --- Test kısmı ---
 if __name__ == "__main__":
-    soru = "Kütüphanede kaç güneş paneli var?"
+    soru = "personel hangi saatler arasında çalışıyor?"
     parcalar = ilgili_parcalari_bul(soru)
 
     print(f"Soru: {soru}\n")
     print(f"Bulunan {len(parcalar)} ilgili parça:\n")
     for i, p in enumerate(parcalar):
         print(f"--- Parça {i+1} ({p['dosya']} - Sayfa {p['sayfa']}) ---")
-        print(p["metin"][:200])
+        print(p["metin"])
         print()
