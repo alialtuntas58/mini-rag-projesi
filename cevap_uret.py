@@ -1,15 +1,21 @@
 import re
 from google.genai import types
 from embedder import client
-from arama import ilgili_parcalari_bul
+from arama import ilgili_parcalari_bul, genel_soru_mu, her_dosyadan_temsilci_parca_bul
+from logger import soru_cevap_logla
 
 
-def cevap_uret(soru):
+def cevap_uret(soru, secili_dosya=None):
     """
     Soruyla ilgili parçaları bulur, Gemini'ye gönderip cevap üretir.
     Geriye {"cevap": ..., "kaynaklar": [(dosya, sayfa), ...]} döner.
     """
-    parcalar = ilgili_parcalari_bul(soru, kac_tane=6)
+    if secili_dosya:
+        parcalar = ilgili_parcalari_bul(soru, kac_tane=6, secili_dosya=secili_dosya)
+    elif genel_soru_mu(soru):
+        parcalar = her_dosyadan_temsilci_parca_bul(soru, dosya_basina=2)
+    else:
+        parcalar = ilgili_parcalari_bul(soru, kac_tane=6)
 
     baglam = ""
     for p in parcalar:
@@ -33,7 +39,7 @@ SORU: {soru}
 CEVAP:"""
 
     yanit = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         contents=prompt
     )
 
@@ -45,13 +51,14 @@ CEVAP:"""
     if not kaynaklar:
         kaynaklar = sorted(set((p["dosya"], p["sayfa"]) for p in parcalar))
 
+    soru_cevap_logla(soru, cevap_metni, kaynaklar)
+
     return {
         "cevap": cevap_metni,
         "kaynaklar": kaynaklar
     }
 
 
-# --- Test kısmı ---
 if __name__ == "__main__":
     soru = "Kütüphanenin yıllık bütçesi kaç TL?"
     sonuc = cevap_uret(soru)

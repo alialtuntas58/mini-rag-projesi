@@ -1,0 +1,74 @@
+[
+  {
+    "soru": "Bu dokümanlar neyden bahsediyor?",
+    "cevap": "Bu dokümanlar şu konulardan bahsetmektedir:\n\n* **ornek.pdf:** Mavişehir Belediyesi'nin eski kütüphaneyi dijital hizmetlerle desteklenen yeni bir öğrenme alanına (Akıllı Şehir Kütüphanesi) dönüştürme projesinden, kütüphanenin fiziksel kapasitesinden, çalışma saatlerinden, kullanım kurallarından ve sunduğu dijital platform hizmetlerinden bahsetmektedir [ornek.pdf - Sayfa 1].\n* **personel.pdf:** Mavişehir Kütüphanesi'nde çalışan toplam personel sayısından, personellerin görev dağılımlarından ve çalışma/vardiya saatlerinden bahsetmektedir [personel.pdf - Sayfa 1].",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:31:51"
+  },
+  {
+    "soru": "Kütüphanede kaç personel çalışıyor?",
+    "cevap": "Mavişehir Kütüphanesi'nde toplam 12 tam zamanlı personel çalışmaktadır. Bunların 4'ü kütüphaneci, 3'ü teknik destek, 5'i ise güvenlik ve temizlik personelidir. [personel.pdf - Sayfa 1]",
+    "puan": "begenmedi",
+    "zaman": "2026-08-18 10:32:42"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begenmedi",
+    "zaman": "2026-08-18 10:32:43"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begenmedi",
+    "zaman": "2026-08-18 10:32:44"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:50"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:51"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:51"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:51"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:51"
+  },
+  {
+    "soru": "Kütüphanede kaç güneş paneli var?",
+    "cevap": "Yenilenen kütüphanenin çatısında 64 güneş paneli bulunmaktadır. [ornek.pdf - Sayfa 2]",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:32:56"
+  },
+  {
+    "soru": "Bu dokümanlar neyden bahsediyor?",
+    "cevap": "Bu dokümanlar şu konulardan bahsetmektedir:\n\n* **ornek.pdf:** Mavişehir Belediyesi'nin eski kütüphaneyi dijital hizmetlerle desteklenen yeni bir öğrenme alanına (Akıllı Şehir Kütüphanesi) dönüştürme projesinden, kütüphanenin fiziksel kapasitesinden, çalışma saatlerinden, kullanım kurallarından ve sunduğu dijital platform hizmetlerinden bahsetmektedir [ornek.pdf - Sayfa 1].\n* **personel.pdf:** Mavişehir Kütüphanesi'nde çalışan toplam personel sayısından, personellerin görev dağılımlarından ve çalışma/vardiya saatlerinden bahsetmektedir [personel.pdf - Sayfa 1].",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:33:03"
+  },
+  {
+    "soru": "Bu dokümanlar neyden bahsediyor?",
+    "cevap": "Dokümanlar, Mavişehir Belediyesi'nin Akıllı Şehir Kütüphanesi projesinden, kütüphanenin fiziksel kapasitesinden, çalışma saatlerinden, rezervasyon kurallarından ve sunduğu dijital hizmetlerden [ornek.pdf - Sayfa 1]; ayrıca kütüphanede çalışan personel sayısından, personellerin görev dağılımından ve çalışma saatlerinden [personel.pdf - Sayfa 1] bahsetmektedir.",
+    "puan": "begeni",
+    "zaman": "2026-08-18 10:36:56"
+  }
+]

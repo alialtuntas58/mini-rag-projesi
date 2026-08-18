@@ -1,0 +1,46 @@
+Test Raporu - 2026-08-18 09:51:25
+==================================================
+
+Test 1: ✅ BAŞARILI
+  Soru: Kütüphanede kaç güneş paneli var?
+  Beklenen: '64'
+  Alınan cevap: Kütüphanenin çatısına 64 güneş paneli yerleştirilmiştir. [ornek.pdf - Sayfa 2]
+
+Test 2: ✅ BAŞARILI
+  Soru: Kütüphanede kaç personel çalışıyor?
+  Beklenen: '12'
+  Alınan cevap: Mavişehir Kütüphanesi'nde toplam 12 tam zamanlı personel çalışmaktadır. Bunlardan 4'ü kütüphaneci, 3'ü teknik destek, 5'i ise güvenlik ve temizlik personelidir. [personel.pdf - Sayfa 1]
+
+Test 3: ✅ BAŞARILI
+  Soru: Dijital platformda kaç elektronik kitap var?
+  Beklenen: '24.000'
+  Alınan cevap: Dijital platformda yaklaşık 24.000 elektronik kitap bulunmaktadır. [ornek.pdf - Sayfa 1]
+
+Test 4: ✅ BAŞARILI
+  Soru: Kütüphane hafta içi kaçta açılıyor?
+  Beklenen: '08.00'
+  Alınan cevap: Kütüphane hafta içi saat 08.00'de açılmaktadır. [ornek.pdf - Sayfa 1]
+
+Test 5: ✅ BAŞARILI
+  Soru: Çalışma odası rezervasyonu en fazla kaç saat?
+  Beklenen: 'iki saat'
+  Alınan cevap: Çalışma odası rezervasyonu en fazla iki saat için yapılabilir. [ornek.pdf - Sayfa 1]
+
+Test 6: ✅ BAŞARILI
+  Soru: Personel hangi saatler arasında çalışıyor?
+  Beklenen: '08:00-18:00'
+  Alınan cevap: Personel hafta içi 08:00-18:00 arasında vardiyalı olarak çalışmaktadır. Hafta sonları ise sadece 2 kütüphaneci görev almaktadır. [personel.pdf - Sayfa 1]
+
+Test 7: ✅ BAŞARILI
+  Soru: Kütüphanenin ay üzerindeki bürosu nerede?
+  Beklenen: 'bulunmuyor'
+  Alınan cevap: Bu bilgi dokümanda bulunmuyor.
+
+Test 8: ✅ BAŞARILI
+  Soru: Kaç adet su dolum istasyonu var?
+  Beklenen: 'üç'
+  Alınan cevap: Kütüphane içinde üç adet ücretsiz su dolum istasyonu bulunmaktadır. [ornek.pdf - Sayfa 2]
+
+==================================================
+SONUÇ: 8/8 çalışan test başarılı (%100.0)
+(0 test API hatası nedeniyle atlandı)

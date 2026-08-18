@@ -4,10 +4,6 @@ from vektor_deposu import koleksiyon
 
 
 def soruyu_embed_et(soru):
-    """
-    Kullanıcının sorusunu embed eder.
-    Dikkat: task_type burada RETRIEVAL_QUERY - dokümanlardan farklı!
-    """
     sonuc = client.models.embed_content(
         model="gemini-embedding-001",
         contents=soru,
@@ -16,37 +12,75 @@ def soruyu_embed_et(soru):
     return sonuc.embeddings[0].values
 
 
-def ilgili_parcalari_bul(soru, kac_tane=6):
+def ilgili_parcalari_bul(soru, kac_tane=6, secili_dosya=None):
     """
     Soruyu embed edip, ChromaDB'de en yakın 'kac_tane' parçayı bulur.
-    Geriye [{"metin": ..., "sayfa": ..., "dosya": ...}, ...] formatında liste döner.
+    secili_dosya verilirse, arama SADECE o dosyanın içinde yapılır (metadata filter).
     """
     soru_vektoru = soruyu_embed_et(soru)
 
-    sonuclar = koleksiyon.query(
-        query_embeddings=[soru_vektoru],
-        n_results=kac_tane
-    )
+    sorgu_parametreleri = {
+        "query_embeddings": [soru_vektoru],
+        "n_results": kac_tane
+    }
+
+    if secili_dosya:
+        sorgu_parametreleri["where"] = {"dosya": secili_dosya}
+
+    sonuclar = koleksiyon.query(**sorgu_parametreleri)
 
     bulunan_parcalar = []
-    for metin, meta in zip(sonuclar["documents"][0], sonuclar["metadatas"][0]):
-        bulunan_parcalar.append({
-            "metin": metin,
-            "sayfa": meta["sayfa"],
-            "dosya": meta.get("dosya", "bilinmiyor")
-        })
+    if sonuclar["documents"] and sonuclar["documents"][0]:
+        for metin, meta in zip(sonuclar["documents"][0], sonuclar["metadatas"][0]):
+            bulunan_parcalar.append({
+                "metin": metin,
+                "sayfa": meta["sayfa"],
+                "dosya": meta.get("dosya", "bilinmiyor")
+            })
 
     return bulunan_parcalar
 
 
-# --- Test kısmı ---
-if __name__ == "__main__":
-    soru = "personel hangi saatler arasında çalışıyor?"
-    parcalar = ilgili_parcalari_bul(soru)
+GENEL_SORU_KELIMELERI = ["dokümanlar", "dosyalar", "genel olarak", "tüm doküman", "hepsi", "özet"]
 
-    print(f"Soru: {soru}\n")
-    print(f"Bulunan {len(parcalar)} ilgili parça:\n")
-    for i, p in enumerate(parcalar):
-        print(f"--- Parça {i+1} ({p['dosya']} - Sayfa {p['sayfa']}) ---")
-        print(p["metin"])
-        print()
+
+def genel_soru_mu(soru):
+    soru_kucuk = soru.lower()
+    return any(kelime in soru_kucuk for kelime in GENEL_SORU_KELIMELERI)
+
+
+def her_dosyadan_temsilci_parca_bul(soru, dosya_basina=2):
+    tum_kayitlar = koleksiyon.get()
+    if not tum_kayitlar["metadatas"]:
+        return []
+
+    dosyalar = set(m["dosya"] for m in tum_kayitlar["metadatas"])
+    soru_vektoru = soruyu_embed_et(soru)
+
+    tum_parcalar = []
+    for dosya_adi in dosyalar:
+        sonuclar = koleksiyon.query(
+            query_embeddings=[soru_vektoru],
+            n_results=dosya_basina,
+            where={"dosya": dosya_adi}
+        )
+        if sonuclar["documents"] and sonuclar["documents"][0]:
+            for metin, meta in zip(sonuclar["documents"][0], sonuclar["metadatas"][0]):
+                tum_parcalar.append({
+                    "metin": metin,
+                    "sayfa": meta["sayfa"],
+                    "dosya": meta["dosya"]
+                })
+
+    return tum_parcalar
+
+
+if __name__ == "__main__":
+    soru = "Kaç personel var?"
+    print("Tüm dosyalarda arama:")
+    for p in ilgili_parcalari_bul(soru):
+        print(f"  {p['dosya']} - Sayfa {p['sayfa']}")
+
+    print("\nSadece personel.pdf'te arama:")
+    for p in ilgili_parcalari_bul(soru, secili_dosya="personel.pdf"):
+        print(f"  {p['dosya']} - Sayfa {p['sayfa']}")
