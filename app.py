@@ -5,6 +5,8 @@ from pdf_okuyucu import pdf_metin_cikar
 from chunker import metni_parcala
 from vektor_deposu import parcalari_kaydet, koleksiyon
 from feedback import feedback_kaydet, feedback_ozeti, feedback_kayitlarini_getir
+from ozet import dokuman_ozetle
+from karsilastir import dokumanlari_karsilastir
 
 st.set_page_config(page_title="Akıllı Doküman Asistanı", page_icon="📚")
 st.title("📚 Akıllı Doküman Soru-Cevap Sistemi")
@@ -65,9 +67,22 @@ with st.sidebar:
                         continue
 
                     toplam_karakter = sum(len(metin.strip()) for _, metin in sayfalar)
+                    ocr_kullanildi = False
+
                     if toplam_karakter < 20:
-                        st.warning(f"⚠️ {dosya.name} içinde okunabilir metin bulunamadı.")
-                        continue
+                        st.info(f"ℹ️ {dosya.name} taranmış bir belge gibi görünüyor, OCR uygulanıyor...")
+                        try:
+                            from ocr import pdf_ocr_ile_oku
+                            sayfalar = pdf_ocr_ile_oku(gecici_yol)
+                            ocr_kullanildi = True
+
+                            toplam_karakter_ocr = sum(len(metin.strip()) for _, metin in sayfalar)
+                            if toplam_karakter_ocr < 20:
+                                st.warning(f"⚠️ {dosya.name} OCR ile de okunamadı, içerik boş görünüyor.")
+                                continue
+                        except Exception as e:
+                            st.error(f"❌ {dosya.name} için OCR başarısız oldu: {str(e)[:150]}")
+                            continue
 
                     parcalar = metni_parcala(sayfalar)
 
@@ -77,7 +92,8 @@ with st.sidebar:
 
                     parcalari_kaydet(parcalar, dosya.name)
                     st.session_state.islenen_dosyalar.add(dosya.name)
-                    st.success(f"✅ {dosya.name} işlendi ({len(parcalar)} parça)")
+                    ocr_notu = " (OCR ile okundu)" if ocr_kullanildi else ""
+                    st.success(f"✅ {dosya.name} işlendi ({len(parcalar)} parça){ocr_notu}")
 
                 except Exception as e:
                     st.error(f"❌ {dosya.name} işlenirken beklenmeyen bir hata oluştu: {str(e)}")
@@ -102,57 +118,9 @@ with st.sidebar:
 
 
 # --- Sekmeler ---
-sekme_sohbet, sekme_ozet, sekme_karsilastir, sekme_degerlendirme = st.tabs(["💬 Sohbet", "📝 Özet", "⚖️ Karşılaştır", "📊 Değerlendirme"])
-with sekme_karsilastir:
-    st.subheader("⚖️ Doküman Karşılaştırma")
-
-    from karsilastir import dokumanlari_karsilastir
-    kayitli_dosyalar_kars = sorted(kayitli_dosyalari_getir())
-
-    if len(kayitli_dosyalar_kars) < 2:
-        st.info("Karşılaştırma için en az 2 doküman yüklenmiş olmalı.")
-    else:
-        kol1, kol2 = st.columns(2)
-        with kol1:
-            dosya_a = st.selectbox("1. Doküman:", kayitli_dosyalar_kars, key="kars_dosya_a")
-        with kol2:
-            secenekler_b = [d for d in kayitli_dosyalar_kars if d != dosya_a]
-            dosya_b = st.selectbox("2. Doküman:", secenekler_b, key="kars_dosya_b")
-
-        konu = st.text_input("Karşılaştırma konusu (isteğe bağlı):", placeholder="örn. çalışma saatleri")
-
-                if st.button("Karşılaştır"):
-            with st.spinner("Dokümanlar karşılaştırılıyor..."):
-                try:
-                    sonuc = dokumanlari_karsilastir(dosya_a, dosya_b, konu if konu else None)
-                    st.session_state.son_karsilastirma = sonuc
-                except Exception as e:
-                    st.error("Şu anda karşılaştırma yapılamadı (muhtemelen günlük API kotası doldu). Lütfen yarın tekrar dene veya birkaç dakika bekle.")
-        if st.session_state.get("son_karsilastirma"):
-            st.write(st.session_state.son_karsilastirma)
-with sekme_ozet:
-    st.subheader("📝 Doküman Özeti")
-
-    from ozet import dokuman_ozetle
-    kayitli_dosyalar_ozet = kayitli_dosyalari_getir()
-
-    if not kayitli_dosyalar_ozet:
-        st.info("Önce soldan bir doküman yükle.")
-    else:
-        secilen_dosya_ozet = st.selectbox("Özetlenecek dokümanı seç:", sorted(kayitli_dosyalar_ozet))
-
-                if st.button("Özet Oluştur"):
-            with st.spinner(f"{secilen_dosya_ozet} özetleniyor..."):
-                try:
-                    sonuc = dokuman_ozetle(secilen_dosya_ozet)
-                    st.session_state.son_ozet = sonuc
-                    st.session_state.son_ozet_dosya = secilen_dosya_ozet
-                except Exception as e:
-                    st.error("Şu anda özet oluşturulamadı (muhtemelen günlük API kotası doldu). Lütfen yarın tekrar dene veya birkaç dakika bekle.")
-
-        if st.session_state.get("son_ozet"):
-            st.caption(f"{st.session_state.son_ozet_dosya} - {st.session_state.son_ozet['sayfa_sayisi']} sayfa")
-            st.write(st.session_state.son_ozet["ozet"])
+sekme_sohbet, sekme_ozet, sekme_karsilastir, sekme_degerlendirme = st.tabs(
+    ["💬 Sohbet", "📝 Özet", "⚖️ Karşılaştır", "📊 Değerlendirme"]
+)
 
 with sekme_sohbet:
     META_ANAHTAR_KELIMELER = ["kaç dosya", "hangi dosya", "hangi doküman", "kaç doküman", "neler yükledim", "dosyaları listele"]
@@ -172,18 +140,16 @@ with sekme_sohbet:
                 if st.button(soru, use_container_width=True):
                     secilen_soru = soru
 
-    # Geçmiş mesajları çiz - feedback butonları KALICI olarak burada
-        # Geçmiş mesajları çiz - feedback butonları KALICI olarak burada
     for i, mesaj in enumerate(st.session_state.mesajlar):
         with st.chat_message(mesaj["rol"]):
             st.write(mesaj["icerik"])
 
             if mesaj["rol"] == "assistant" and mesaj.get("kaynaklar"):
                 kaynak_metni = ", ".join(f"{d} - Sayfa {s}" for d, s in mesaj["kaynaklar"])
-                st.caption(f"📄 Kaynak: {kaynak_metni}")
+                guven_metni = f" | Güven: {mesaj['guven']}" if mesaj.get("guven") else ""
+                st.caption(f"📄 Kaynak: {kaynak_metni}{guven_metni}")
 
             if mesaj["rol"] == "assistant" and mesaj.get("gosterilebilir_feedback"):
-                # Daha önce oy verilmiş mi kontrol et
                 verilen_oy = mesaj.get("verilen_oy")
 
                 if verilen_oy:
@@ -237,12 +203,13 @@ with sekme_sohbet:
 
                         if sonuc["kaynaklar"]:
                             kaynak_metni = ", ".join(f"{d} - Sayfa {s}" for d, s in sonuc["kaynaklar"])
-                            st.caption(f"📄 Kaynak: {kaynak_metni}")
+                            st.caption(f"📄 Kaynak: {kaynak_metni} | Güven: {sonuc.get('guven', 'Bilinmiyor')}")
 
                         yeni_mesaj = {
                             "rol": "assistant",
                             "icerik": sonuc["cevap"],
                             "kaynaklar": sonuc["kaynaklar"],
+                            "guven": sonuc.get("guven", "Bilinmiyor"),
                             "gosterilebilir_feedback": True
                         }
                     except Exception as e:
@@ -251,6 +218,59 @@ with sekme_sohbet:
 
         st.session_state.mesajlar.append(yeni_mesaj)
         st.rerun()
+
+
+with sekme_ozet:
+    st.subheader("📝 Doküman Özeti")
+
+    kayitli_dosyalar_ozet = kayitli_dosyalari_getir()
+
+    if not kayitli_dosyalar_ozet:
+        st.info("Önce soldan bir doküman yükle.")
+    else:
+        secilen_dosya_ozet = st.selectbox("Özetlenecek dokümanı seç:", sorted(kayitli_dosyalar_ozet))
+
+        if st.button("Özet Oluştur"):
+            with st.spinner(f"{secilen_dosya_ozet} özetleniyor..."):
+                try:
+                    sonuc = dokuman_ozetle(secilen_dosya_ozet)
+                    st.session_state.son_ozet = sonuc
+                    st.session_state.son_ozet_dosya = secilen_dosya_ozet
+                except Exception as e:
+                    st.error("Şu anda özet oluşturulamadı (muhtemelen günlük API kotası doldu). Lütfen daha sonra tekrar dene.")
+
+        if st.session_state.get("son_ozet"):
+            st.caption(f"{st.session_state.son_ozet_dosya} - {st.session_state.son_ozet['sayfa_sayisi']} sayfa")
+            st.write(st.session_state.son_ozet["ozet"])
+
+
+with sekme_karsilastir:
+    st.subheader("⚖️ Doküman Karşılaştırma")
+
+    kayitli_dosyalar_kars = sorted(kayitli_dosyalari_getir())
+
+    if len(kayitli_dosyalar_kars) < 2:
+        st.info("Karşılaştırma için en az 2 doküman yüklenmiş olmalı.")
+    else:
+        kol1, kol2 = st.columns(2)
+        with kol1:
+            dosya_a = st.selectbox("1. Doküman:", kayitli_dosyalar_kars, key="kars_dosya_a")
+        with kol2:
+            secenekler_b = [d for d in kayitli_dosyalar_kars if d != dosya_a]
+            dosya_b = st.selectbox("2. Doküman:", secenekler_b, key="kars_dosya_b")
+
+        konu = st.text_input("Karşılaştırma konusu (isteğe bağlı):", placeholder="örn. çalışma saatleri")
+
+        if st.button("Karşılaştır"):
+            with st.spinner("Dokümanlar karşılaştırılıyor..."):
+                try:
+                    sonuc = dokumanlari_karsilastir(dosya_a, dosya_b, konu if konu else None)
+                    st.session_state.son_karsilastirma = sonuc
+                except Exception as e:
+                    st.error("Şu anda karşılaştırma yapılamadı (muhtemelen günlük API kotası doldu). Lütfen daha sonra tekrar dene.")
+
+        if st.session_state.get("son_karsilastirma"):
+            st.write(st.session_state.son_karsilastirma)
 
 
 with sekme_degerlendirme:

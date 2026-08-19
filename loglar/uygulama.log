@@ -99,3 +99,46 @@
 2026-08-18 11:09:22,580 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
 2026-08-18 11:17:56,039 - INFO - AFC is enabled with max remote calls: 10.
 2026-08-18 11:17:56,412 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-08-19 12:58:22,049 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 12:58:22,120 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 12:58:25,491 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 12:58:25,496 - INFO - SORU: Bu dokümanlar neyden bahsediyor? | KAYNAKLAR: ornek.pdf-s1, personel.pdf-s1 | CEVAP_UZUNLUK: 424 karakter
+2026-08-19 12:58:31,700 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 12:58:42,031 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:02:30,601 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:02:30,696 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:02:34,168 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:02:34,178 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:02:36,783 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:02:36,783 - INFO - SORU: Kütüphanede kaç personel çalışıyor? | KAYNAKLAR: personel.pdf-s1 | CEVAP_UZUNLUK: 175 karakter
+2026-08-19 13:02:55,104 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:02:57,730 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:02:58,072 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:02:58,103 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:03:00,582 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:03:00,588 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:03:03,418 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:03:03,419 - INFO - SORU: Nasılsın | KAYNAKLAR: ornek.pdf-s1, ornek.pdf-s2 | CEVAP_UZUNLUK: 30 karakter
+2026-08-19 13:03:27,298 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:03:32,651 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:03:33,009 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:03:33,080 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:03:38,691 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:03:38,727 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:03:41,002 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:03:41,008 - INFO - SORU: Güneş panelleri hakkında bilgi ver | KAYNAKLAR: ornek.pdf-s2 | CEVAP_UZUNLUK: 193 karakter
+2026-08-19 13:04:41,345 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:04:44,798 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:04:45,159 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:04:45,186 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:05:29,540 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:05:29,542 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:05:37,297 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:05:37,299 - INFO - SORU: Kütüphanenin çalışma saatleri ve enerji tasarrufu uygulamaları nelerdir? | KAYNAKLAR: ornek.pdf-s1, ornek.pdf-s2, personel.pdf-s1 | CEVAP_UZUNLUK: 917 karakter
+2026-08-19 13:25:46,800 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:26:08,672 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-08-19 13:26:08,753 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:26:12,600 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:26:12,603 - INFO - AFC is enabled with max remote calls: 10.
+2026-08-19 13:26:15,074 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-08-19 13:26:15,077 - INFO - SORU:    Kütüphanede kaç toplantı odası var? | KAYNAKLAR: taranmis_test.pdf-s1 | CEVAP_UZUNLUK: 99 karakter
