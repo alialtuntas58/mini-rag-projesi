@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: rag_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Veritabanı ve geçici dosyaların kaybolmaması için bilgisayarınla eşliyoruz
+      - ./chroma_db:/app/chroma_db
+      - ./temp_uploads:/app/temp_uploads
+    restart: unless-stopped
