@@ -3,4 +3,10 @@ venv/
 __pycache__/
 *.pyc
 chroma_db/
+loglar/
+gecici_yuklemeler/
+temp_uploads/
+data/feedback_kayitlari.json
+data/gecici_sayfa.png
 cikti.txt
+requirements_tam.txt

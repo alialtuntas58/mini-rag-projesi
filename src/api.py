@@ -17,9 +17,9 @@ from cevap_uret import cevap_uret  # <-- BEYNİ BURAYA BAĞLADIK!
 app = FastAPI(title="Gelişmiş Akıllı Doküman Asistanı API")
 
 # --- Geçici dosyalar için klasör ---
-TEMP_DIR = "temp_uploads"
+_PROJE_KOKU_API = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+TEMP_DIR = _os.path.join(_PROJE_KOKU_API, "gecici_yuklemeler")
 os.makedirs(TEMP_DIR, exist_ok=True)
-
 
 class SoruIstegi(BaseModel):
     soru: str

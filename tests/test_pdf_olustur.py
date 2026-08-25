@@ -1,4 +1,5 @@
-import fitz
+import pymupdf as fitz
+import os
 
 dokuman = fitz.open()
 sayfa = dokuman.new_page()
@@ -16,6 +17,8 @@ Hafta sonlari sadece 2 kutuphaneci gorev almaktadir.
 """
 
 sayfa.insert_text((50, 50), metin, fontsize=11)
-dokuman.save("personel.pdf")
+
+cikti_yolu = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "personel.pdf")
+dokuman.save(cikti_yolu)
 dokuman.close()
-print("personel.pdf olusturuldu.")
+print(f"personel.pdf oluşturuldu: {cikti_yolu}")

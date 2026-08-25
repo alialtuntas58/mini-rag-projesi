@@ -2,7 +2,8 @@ import json
 import os
 from datetime import datetime
 
-FEEDBACK_DOSYASI = "feedback_kayitlari.json"
+_PROJE_KOKU = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FEEDBACK_DOSYASI = os.path.join(_PROJE_KOKU, "data", "feedback_kayitlari.json")
 
 
 def feedback_kaydet(soru, cevap, puan):
@@ -15,10 +16,8 @@ def feedback_kaydet(soru, cevap, puan):
         "puan": puan,
         "zaman": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-
     kayitlar = feedback_kayitlarini_getir()
     kayitlar.append(kayit)
-
     with open(FEEDBACK_DOSYASI, "w", encoding="utf-8") as f:
         json.dump(kayitlar, f, ensure_ascii=False, indent=2)
 
@@ -35,7 +34,6 @@ def feedback_ozeti():
     toplam = len(kayitlar)
     begeni = sum(1 for k in kayitlar if k["puan"] == "begeni")
     begenmedi = sum(1 for k in kayitlar if k["puan"] == "begenmedi")
-
     return {
         "toplam": toplam,
         "begeni": begeni,

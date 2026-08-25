@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import pymupdf as fitz
+import os
 
-# 1. Adım: içine yazı yazılmış bir resim oluştur (gerçek bir kağıt taraması gibi)
 genislik, yukseklik = 1000, 1400
 resim = Image.new("RGB", (genislik, yukseklik), color="white")
 cizim = ImageDraw.Draw(resim)
@@ -19,7 +19,6 @@ Kutuphane bunyesinde ayrica 3 adet 3D yazici
 bulunmaktadir ve ogrenciler bu yazicilari
 ucretsiz olarak kullanabilir."""
 
-# Basit bir yazı tipi kullanıyoruz (Windows'ta genelde bulunur)
 try:
     font = ImageFont.truetype("arial.ttf", 32)
 except:
@@ -27,13 +26,18 @@ except:
 
 cizim.multiline_text((50, 50), metin, fill="black", font=font, spacing=15)
 
-resim.save("gecici_sayfa.png")
+data_klasoru = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
+os.makedirs(data_klasoru, exist_ok=True)
 
-# 2. Adım: bu resmi, METİN KATMANI OLMADAN bir PDF sayfasına göm
+resim_yolu = os.path.join(data_klasoru, "gecici_sayfa.png")
+resim.save(resim_yolu)
+
 dokuman = fitz.open()
 sayfa = dokuman.new_page(width=genislik, height=yukseklik)
-sayfa.insert_image(sayfa.rect, filename="gecici_sayfa.png")
-dokuman.save("taranmis_test.pdf")
+sayfa.insert_image(sayfa.rect, filename=resim_yolu)
+
+pdf_yolu = os.path.join(data_klasoru, "taranmis_test.pdf")
+dokuman.save(pdf_yolu)
 dokuman.close()
 
-print("taranmis_test.pdf oluşturuldu (metin katmanı yok, sadece resim).")
+print(f"taranmis_test.pdf oluşturuldu: {pdf_yolu}")

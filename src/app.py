@@ -32,7 +32,6 @@ def kayitli_dosyalari_getir():
     return dosyalar
 
 
-# --- Kenar çubuğu: PDF yükleme alanı ---
 with st.sidebar:
     st.header("📄 Doküman Yükle")
     yuklenen_dosyalar = st.file_uploader(
@@ -55,8 +54,10 @@ with st.sidebar:
 
             with st.spinner(f"{dosya.name} işleniyor..."):
                 try:
-                    gecici_yol = os.path.join("gecici_yuklemeler", dosya.name)
-                    os.makedirs("gecici_yuklemeler", exist_ok=True)
+                    _proje_koku = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    _gecici_klasor = os.path.join(_proje_koku, "gecici_yuklemeler")
+                    os.makedirs(_gecici_klasor, exist_ok=True)
+                    gecici_yol = os.path.join(_gecici_klasor, dosya.name)
                     with open(gecici_yol, "wb") as f:
                         f.write(dosya.getbuffer())
 
@@ -117,7 +118,6 @@ with st.sidebar:
         st.rerun()
 
 
-# --- Sekmeler ---
 sekme_sohbet, sekme_ozet, sekme_karsilastir, sekme_degerlendirme = st.tabs(
     ["💬 Sohbet", "📝 Özet", "⚖️ Karşılaştır", "📊 Değerlendirme"]
 )

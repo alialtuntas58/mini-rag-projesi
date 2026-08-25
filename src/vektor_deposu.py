@@ -1,7 +1,12 @@
 import chromadb
+import os
 from embedder import metni_embed_et
 
-client = chromadb.PersistentClient(path="./chroma_db")
+# Proje kökünü bul (bu dosyanın bir üst klasörü), nereden calistirilirsa calistirilsin
+_PROJE_KOKU = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_CHROMA_YOLU = os.path.join(_PROJE_KOKU, "chroma_db")
+
+client = chromadb.PersistentClient(path=_CHROMA_YOLU)
 koleksiyon = client.get_or_create_collection(name="dokumanlar")
 
 
@@ -12,11 +17,7 @@ def parcalari_kaydet(parcalar, dosya_adi):
     """
     for i, parca in enumerate(parcalar):
         vektor = metni_embed_et(parca["metin"])
-
-        # id artık dosya adına da bağlı, böylece farklı dosyalardaki
-        # "parca_0" isimleri çakışmıyor
         benzersiz_id = f"{dosya_adi}_parca_{i}"
-
         koleksiyon.upsert(
             ids=[benzersiz_id],
             embeddings=[vektor],
@@ -31,18 +32,15 @@ def klasordeki_tum_pdfleri_isle(klasor_yolu="."):
     Verilen klasördeki tüm .pdf dosyalarını bulur, her birini
     okur, parçalar, embed eder ve ChromaDB'ye kaydeder.
     """
-    import os
     from pdf_okuyucu import pdf_metin_cikar
     from chunker import metni_parcala
 
     pdf_dosyalari = [f for f in os.listdir(klasor_yolu) if f.lower().endswith(".pdf")]
-
     if not pdf_dosyalari:
         print("Klasörde hiç PDF dosyası bulunamadı.")
         return
 
     print(f"{len(pdf_dosyalari)} PDF dosyası bulundu: {pdf_dosyalari}\n")
-
     for dosya_adi in pdf_dosyalari:
         print(f"\n=== {dosya_adi} işleniyor ===")
         sayfalar = pdf_metin_cikar(os.path.join(klasor_yolu, dosya_adi))
@@ -52,6 +50,5 @@ def klasordeki_tum_pdfleri_isle(klasor_yolu="."):
     print(f"\nToplam kayıt sayısı: {koleksiyon.count()}")
 
 
-# --- Test kısmı ---
 if __name__ == "__main__":
     klasordeki_tum_pdfleri_isle(".")

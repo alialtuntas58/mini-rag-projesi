@@ -32,7 +32,9 @@ API_URL = "http://127.0.0.1:8000/ask"
 def testleri_calistir():
     print(f"Toplam {len(test_senaryolari)} test başlatılıyor...\n")
     
-    with open("TEST_RAPORU.md", "w", encoding="utf-8") as rapor:
+      import os
+    rapor_yolu = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "API_TEST_RAPORU.md")
+    with open(rapor_yolu, "w", encoding="utf-8") as rapor:
         rapor.write("# 🧪 Gelişmiş RAG Sistemi Test Raporu\n\n")
         rapor.write("Bu rapor, sistemin farklı senaryolara karşı verdiği yanıtları ve performans metriklerini içerir.\n\n")
         rapor.write("---\n\n")
