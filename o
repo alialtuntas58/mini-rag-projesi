@@ -1,0 +1,5 @@
+[33m033e600[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Proje yapisi temizlendi: mutlak yol duzeltmeleri (chroma_db, loglar, feedback, gecici dosyalar), requirements.txt guncellendi, Dockerfile OCR destegi eklendi, genisletilmis test seti
+[33m8dfaea6[m Proje klasör mimarisi düzenlendi, Dockerfile güncellendi ve Teknik Rapor eklendi
+[33m35d0d70[m Seviye B ozellikleri: metadata filtreleme, feedback, ozet, karsilastirma, hybrid search, reranker, prompt injection savunmasi, OCR destegi
+[33m49c900f[m Evaluation testleri eklendi, personel PDF indeksleme sorunu duzeltildi ve hybrid arama sisteme entegre edildi
+[33m10c19e1[m Coklu PDF UI, halisinasyon kontrolu, meta soru yonetimi ve hata yonetimi eklendi - Hafta 3 tamamlandi
