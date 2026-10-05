@@ -7,6 +7,7 @@ from vektor_deposu import parcalari_kaydet, koleksiyon
 from feedback import feedback_kaydet, feedback_ozeti, feedback_kayitlarini_getir
 from ozet import dokuman_ozetle
 from karsilastir import dokumanlari_karsilastir
+from dosya_hash import dosya_hash_hesapla, hash_kayitli_mi
 
 st.set_page_config(page_title="Akıllı Doküman Asistanı", page_icon="📚")
 st.title("📚 Akıllı Doküman Soru-Cevap Sistemi")
@@ -61,6 +62,14 @@ with st.sidebar:
                     with open(gecici_yol, "wb") as f:
                         f.write(dosya.getbuffer())
 
+                    mevcut_hash = dosya_hash_hesapla(gecici_yol)
+                    ayni_icerikli_dosya = hash_kayitli_mi(mevcut_hash, koleksiyon)
+
+                    if ayni_icerikli_dosya:
+                        st.warning(f"⚠️ Bu doküman zaten yüklü: '{ayni_icerikli_dosya}' ile aynı içeriğe sahip. Tekrar işlenmedi.")
+                        st.session_state.islenen_dosyalar.add(dosya.name)
+                        continue
+
                     try:
                         sayfalar = pdf_metin_cikar(gecici_yol)
                     except Exception as e:
@@ -91,7 +100,7 @@ with st.sidebar:
                         st.warning(f"⚠️ {dosya.name} işlenemedi, içerik boş görünüyor.")
                         continue
 
-                    parcalari_kaydet(parcalar, dosya.name)
+                    parcalari_kaydet(parcalar, dosya.name, dosya_hash=mevcut_hash)
                     st.session_state.islenen_dosyalar.add(dosya.name)
                     ocr_notu = " (OCR ile okundu)" if ocr_kullanildi else ""
                     st.success(f"✅ {dosya.name} işlendi ({len(parcalar)} parça){ocr_notu}")
