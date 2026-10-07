@@ -5,6 +5,7 @@ from arama import genel_soru_mu, her_dosyadan_temsilci_parca_bul
 from hybrid_arama import hybrid_arama
 from reranker import parcalari_yeniden_sirala
 from logger import soru_cevap_logla
+from cache import cache_getir, cache_kaydet
 
 
 def cevap_uret(soru, secili_dosya=None):
@@ -12,6 +13,10 @@ def cevap_uret(soru, secili_dosya=None):
     Soruyla ilgili parçaları bulur, Gemini'ye gönderip cevap üretir.
     Geriye {"cevap": ..., "kaynaklar": [(dosya, sayfa), ...], "guven": ...} döner.
     """
+    onbellek_sonucu = cache_getir(soru, secili_dosya)
+    if onbellek_sonucu:
+        return onbellek_sonucu
+
     if genel_soru_mu(soru) and not secili_dosya:
         parcalar = her_dosyadan_temsilci_parca_bul(soru, dosya_basina=2)
     else:
@@ -72,11 +77,15 @@ CEVAP:"""
     else:
         guven_seviyesi = "Düşük"
 
-    return {
+    sonuc = {
         "cevap": cevap_metni,
         "kaynaklar": kaynaklar,
         "guven": guven_seviyesi
     }
+
+    cache_kaydet(soru, secili_dosya, sonuc)
+
+    return sonuc
 
 
 if __name__ == "__main__":
