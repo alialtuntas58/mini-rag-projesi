@@ -6,6 +6,15 @@ from hybrid_arama import hybrid_arama
 from reranker import parcalari_yeniden_sirala
 from logger import soru_cevap_logla
 from cache import cache_getir, cache_kaydet
+from esik import en_iyi_mesafe
+
+# Deneysel olarak belirlendi: dokümandaki sorular 0.37-0.59, alakasız sorular 0.89+
+MESAFE_ESIGI = 0.75
+
+YETERSIZ_BAGLAM_MESAJI = (
+    "Bu bilgi dokümanda bulunmuyor: yüklenen dokümanlarda bu soruyu "
+    "destekleyen yeterli bilgi bulamadım."
+)
 
 
 def cevap_uret(soru, secili_dosya=None):
@@ -17,7 +26,22 @@ def cevap_uret(soru, secili_dosya=None):
     if onbellek_sonucu:
         return onbellek_sonucu
 
-    if genel_soru_mu(soru) and not secili_dosya:
+    genel_soru = genel_soru_mu(soru) and not secili_dosya
+
+    # Yetersiz bağlam kontrolü: en yakın parça bile çok uzaksa LLM'e hiç gitme
+    if not genel_soru:
+        mesafe = en_iyi_mesafe(soru, secili_dosya)
+        if mesafe is not None and mesafe > MESAFE_ESIGI:
+            soru_cevap_logla(soru, YETERSIZ_BAGLAM_MESAJI, [])
+            return {
+                "cevap": YETERSIZ_BAGLAM_MESAJI,
+                "kaynaklar": [],
+                "guven": "Kanıt yok",
+                "esik_nedeniyle_reddedildi": True,
+                "mesafe": mesafe
+            }
+
+    if genel_soru:
         parcalar = her_dosyadan_temsilci_parca_bul(soru, dosya_basina=2)
     else:
         ilk_sonuclar = hybrid_arama(soru, kac_tane=8, secili_dosya=secili_dosya)
