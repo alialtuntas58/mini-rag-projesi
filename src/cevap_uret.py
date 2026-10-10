@@ -1,4 +1,5 @@
 import re
+import time
 from google.genai import types
 from embedder import client
 from arama import genel_soru_mu, her_dosyadan_temsilci_parca_bul
@@ -20,13 +21,24 @@ YETERSIZ_BAGLAM_MESAJI = (
 def cevap_uret(soru, secili_dosya=None):
     """
     Soruyla ilgili parçaları bulur, Gemini'ye gönderip cevap üretir.
-    Geriye {"cevap": ..., "kaynaklar": [(dosya, sayfa), ...], "guven": ...} döner.
+    Geriye {"cevap", "kaynaklar", "guven", "debug"} döner.
     """
+    baslangic = time.time()
+
     onbellek_sonucu = cache_getir(soru, secili_dosya)
     if onbellek_sonucu:
-        return onbellek_sonucu
+        sonuc = dict(onbellek_sonucu)
+        sonuc["debug"] = {
+            "onbellekten": True,
+            "llm_cagrildi": False,
+            "sure_saniye": round(time.time() - baslangic, 3),
+            "mesafe": None,
+            "parcalar": [],
+        }
+        return sonuc
 
     genel_soru = genel_soru_mu(soru) and not secili_dosya
+    mesafe = None
 
     # Yetersiz bağlam kontrolü: en yakın parça bile çok uzaksa LLM'e hiç gitme
     if not genel_soru:
@@ -38,7 +50,14 @@ def cevap_uret(soru, secili_dosya=None):
                 "kaynaklar": [],
                 "guven": "Kanıt yok",
                 "esik_nedeniyle_reddedildi": True,
-                "mesafe": mesafe
+                "mesafe": mesafe,
+                "debug": {
+                    "onbellekten": False,
+                    "llm_cagrildi": False,
+                    "sure_saniye": round(time.time() - baslangic, 3),
+                    "mesafe": mesafe,
+                    "parcalar": [],
+                },
             }
 
     if genel_soru:
@@ -81,6 +100,10 @@ CEVAP:"""
 
     cevap_metni = yanit.text
 
+    kullanim = getattr(yanit, "usage_metadata", None)
+    prompt_token = getattr(kullanim, "prompt_token_count", None)
+    cevap_token = getattr(kullanim, "candidates_token_count", None)
+
     bahsedilenler = re.findall(r'\[([\w\.\-]+\.pdf) - Sayfa (\d+)\]', cevap_metni)
     kaynaklar = sorted(set((dosya, int(sayfa)) for dosya, sayfa in bahsedilenler))
 
@@ -108,6 +131,19 @@ CEVAP:"""
     }
 
     cache_kaydet(soru, secili_dosya, sonuc)
+
+    sonuc["debug"] = {
+        "onbellekten": False,
+        "llm_cagrildi": True,
+        "sure_saniye": round(time.time() - baslangic, 2),
+        "mesafe": mesafe,
+        "prompt_token": prompt_token,
+        "cevap_token": cevap_token,
+        "parcalar": [
+            {"dosya": p["dosya"], "sayfa": p["sayfa"], "metin": p["metin"]}
+            for p in parcalar
+        ],
+    }
 
     return sonuc
 

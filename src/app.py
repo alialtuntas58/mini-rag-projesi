@@ -127,8 +127,8 @@ with st.sidebar:
         st.rerun()
 
 
-sekme_sohbet, sekme_ozet, sekme_karsilastir, sekme_degerlendirme = st.tabs(
-    ["💬 Sohbet", "📝 Özet", "⚖️ Karşılaştır", "📊 Değerlendirme"]
+sekme_sohbet, sekme_ozet, sekme_karsilastir, sekme_degerlendirme, sekme_debug = st.tabs(
+    ["💬 Sohbet", "📝 Özet", "⚖️ Karşılaştır", "📊 Değerlendirme", "🛠️ Debug"]
 )
 
 with sekme_sohbet:
@@ -208,6 +208,7 @@ with sekme_sohbet:
                     try:
                         secili = st.session_state.get("secili_dosya", None)
                         sonuc = st.session_state.oturum.soru_sor(kullanici_sorusu, secili_dosya=secili)
+                        st.session_state.son_debug = {"soru": kullanici_sorusu, "guven": sonuc.get("guven"), "debug": sonuc.get("debug", {})}
                         st.write(sonuc["cevap"])
 
                         if sonuc["kaynaklar"]:
@@ -309,3 +310,8 @@ with sekme_degerlendirme:
                     st.caption(f"Zaman: {k['zaman']}")
         else:
             st.write("Henüz beğenilmeyen cevap yok. 🎉")
+
+
+with sekme_debug:
+    from debug_panel import debug_sekmesi_ciz
+    debug_sekmesi_ciz()
