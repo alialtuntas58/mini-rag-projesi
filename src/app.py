@@ -8,6 +8,7 @@ from feedback import feedback_kaydet, feedback_ozeti, feedback_kayitlarini_getir
 from ozet import dokuman_ozetle
 from karsilastir import dokumanlari_karsilastir
 from dosya_hash import dosya_hash_hesapla, hash_kayitli_mi
+from disa_aktar import markdown_olustur, json_olustur
 
 st.set_page_config(page_title="Akıllı Doküman Asistanı", page_icon="📚")
 st.title("📚 Akıllı Doküman Soru-Cevap Sistemi")
@@ -157,6 +158,24 @@ with sekme_sohbet:
                 kaynak_metni = ", ".join(f"{d} - Sayfa {s}" for d, s in mesaj["kaynaklar"])
                 guven_metni = f" | Güven: {mesaj['guven']}" if mesaj.get("guven") else ""
                 st.caption(f"📄 Kaynak: {kaynak_metni}{guven_metni}")
+                soru_dl = st.session_state.mesajlar[i - 1]["icerik"] if i > 0 else ""
+                dl1, dl2, _ = st.columns([2, 2, 6])
+                with dl1:
+                    st.download_button(
+                        "⬇️ Markdown",
+                        data=markdown_olustur(soru_dl, mesaj["icerik"], mesaj["kaynaklar"], mesaj.get("guven")),
+                        file_name=f"cevap_{i}.md",
+                        mime="text/markdown",
+                        key=f"md_{i}",
+                    )
+                with dl2:
+                    st.download_button(
+                        "⬇️ JSON",
+                        data=json_olustur(soru_dl, mesaj["icerik"], mesaj["kaynaklar"], mesaj.get("guven")),
+                        file_name=f"cevap_{i}.json",
+                        mime="application/json",
+                        key=f"json_{i}",
+                    )
 
             if mesaj["rol"] == "assistant" and mesaj.get("gosterilebilir_feedback"):
                 verilen_oy = mesaj.get("verilen_oy")
